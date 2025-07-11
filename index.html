@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kalkulator Animasi</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(120deg, #89f7fe, #66a6ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      animation: fadeIn 1.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .calculator {
+      background-color: #e1ffd5ee;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+      padding: 25px;
+      width: 330px;
+      animation: slideIn 1s ease;
+    }
+
+    @keyframes slideIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .display {
+      background-color: #f3f3f3;
+      color: #333;
+      font-size: 2em;
+      padding: 15px;
+      border-radius: 15px;
+      text-align: right;
+      margin-bottom: 20px;
+      height: 60px;
+      overflow: hidden;
+      transition: all 0.2s ease-in-out;
+      animation: pulse 0.4s ease-out;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1.02); }
+      to { transform: scale(1); }
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .buttons button {
+      padding: 20px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      background-color: #ececec;
+      transition: all 0.2s ease, transform 0.1s;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    .buttons button:hover {
+      background-color: #dcdcdc;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+    }
+
+    .buttons button:active {
+      transform: scale(0.95);
+    }
+
+    .operator {
+      background-color: #ff9500;
+      color: white;
+    }
+
+    .operator:hover {
+      background-color: #e08900;
+    }
+
+    .equal {
+      background-color: #34c759;
+      color: white;
+    }
+
+    .equal:hover {
+      background-color: #28a745;
+    }
+
+    .clear {
+      background-color: #ff3b30;
+      color: white;
+    }
+
+    .clear:hover {
+      background-color: #cc2e26;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button onclick="clearDisplay()" class="clear">C</button>
+      <button onclick="appendOperator('/')" class="operator">÷</button>
+      <button onclick="appendOperator('*')" class="operator">×</button>
+      <button onclick="appendOperator('-')" class="operator">−</button>
+
+      <button onclick="appendNumber('7')">7</button>
+      <button onclick="appendNumber('8')">8</button>
+      <button onclick="appendNumber('9')">9</button>
+      <button onclick="appendOperator('+')" class="operator">+</button>
+
+      <button onclick="appendNumber('4')">4</button>
+      <button onclick="appendNumber('5')">5</button>
+      <button onclick="appendNumber('6')">6</button>
+      <button onclick="calculate()" class="equal">=</button>
+
+      <button onclick="appendNumber('1')">1</button>
+      <button onclick="appendNumber('2')">2</button>
+      <button onclick="appendNumber('3')">3</button>
+
+      <button onclick="appendNumber('0')" style="grid-column: span 2">0</button>
+      <button onclick="appendNumber('.')">.</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    let current = '';
+
+    function appendNumber(num) {
+      if (display.textContent === '0' && num !== '.') {
+        current = num;
+      } else {
+        current += num;
+      }
+      updateDisplay(current);
+    }
+
+    function appendOperator(op) {
+      if (current === '') return;
+      const lastChar = current[current.length - 1];
+      if ("+-*/".includes(lastChar)) {
+        current = current.slice(0, -1) + op;
+      } else {
+        current += op;
+      }
+      updateDisplay(current);
+    }
+
+    function clearDisplay() {
+      current = '';
+      updateDisplay('0');
+    }
+
+    function calculate() {
+      try {
+        let result = eval(current);
+        current = result.toString();
+        updateDisplay(current);
+      } catch (e) {
+        updateDisplay('Error');
+        current = '';
+      }
+    }
+
+    function updateDisplay(value) {
+      display.textContent = value;
+      display.style.animation = 'none';
+      display.offsetHeight; // Force reflow
+      display.style.animation = 'pulse 0.3s ease-out';
+    }
+  </script>
+</body>
+</html>
